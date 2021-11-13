@@ -1,0 +1,69 @@
+name: Build and test
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.17.3'
+
+      - name: Check go mod status
+        run: |
+          make gomod_tidy
+          if [[ ! -z $(git status -s) ]]
+          then
+            echo "Go mod - state is not clean:"
+            git status -s
+            git diff "$GITHUB_SHA"
+            exit 1
+          fi
+
+      - name: Build
+        run: |
+          make build
+          if [[ $? -ne 0 ]]
+          then
+            echo "Build failed"
+            exit 1
+          fi
+
+      - name: Check format
+        run: |
+          make format
+          if [[ ! -z $(git status -s) ]]
+          then
+            echo "go fmt - found badly formatted source : $(git status -s)"
+            exit 1
+          fi
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Docker Linting
+        uses: hadolint/hadolint-action@v1.6.0
+        with:
+          dockerfile: Dockerfile
+
+      - name: Docker Build
+        uses: docker/setup-buildx-action@v1
+
+      - name: Docker Push
+        uses: docker/build-push-action@v2
+        with:
+          file: ./Dockerfile
+          push: true
+          context: ./
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/golang-docker-template:latest

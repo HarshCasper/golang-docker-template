@@ -11,3 +11,6 @@ format:
 
 test:
 	go test -v ./...
+
+gomod_tidy:
+	go mod tidy
