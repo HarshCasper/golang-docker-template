@@ -14,3 +14,6 @@ test:
 
 gomod_tidy:
 	go mod tidy
+
+docker_test:
+	bash tests/docker-test.sh
