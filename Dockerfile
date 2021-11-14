@@ -1,4 +1,5 @@
 FROM golang:alpine3.13 AS build
+LABEL org.opencontainers.image.source="https://github.com/harshcasper/golang-docker-template"
 
 ENV GOOS=linux GOARCH=amd64
 

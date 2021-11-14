@@ -1,6 +1,6 @@
-# Golang-Docker template
+# [Golang-Docker template](https://harshcasper.github.io/golang-docker-template/)
 
-A template project to create a Docker image for a Go application. The example application exposes an HTTP endpoint through a REST API packaged as a static binary.
+A template project to create a Docker image for a Go application. The example application exposes an HTTP endpoint through a REST API packaged as a static binary. View on [Docker Hub](https://hub.docker.com/repository/docker/harshcasper/golang-docker-template) or [GitHub Container Registry](https://github.com/HarshCasper/golang-docker-template/pkgs/container/golang-docker-template).
 
 ## Usage
 
